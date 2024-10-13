@@ -1,5 +1,0 @@
-# 두 정수 입력받기
-A, B = map(int, input().split())
-
-# A + B 출력하기
-print(A + B)
