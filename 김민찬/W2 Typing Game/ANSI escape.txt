@@ -7,7 +7,7 @@ ANSI escape lines:
 \033[B                  # Move Down by 1 line
 \033[C                  # Move Right by 1 column
 \033[D                  # Move Left by 1 column
-\033[y;xH               # Move to Specific Position (row y, column x)
+\033[a;bH               # Move to Specific Position (line a, position b)
 
 글씨의 바탕 색깔을 바꾸는 코드
 \033[30m                # Black (Foreground)

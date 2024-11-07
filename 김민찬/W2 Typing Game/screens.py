@@ -14,40 +14,41 @@ def clear_area():
         time.sleep(0.1)
 
 # 시작화면을 출력하는 함수
+title_start=10
 def load_title():
     os.system("cls")
     print("=" * frame_width)
     time.sleep(0.1)
-    print("\t _______   ______ ___ _   _  ____    ____    _    __  __ _____")
+    print(f"\033[2;{title_start}H _______   ______ ___ _   _  ____    ____    _    __  __ _____")
     time.sleep(0.1)
-    print("\t|_   _\\ \\ / /  _ \\_ _| \\ | |/ ___|  / ___|  / \\  |  \\/  | ____|")
+    print(f"\033[3;{title_start}H|_   _\\ \\ / /  _ \\_ _| \\ | |/ ___|  / ___|  / \\  |  \\/  | ____|")
     time.sleep(0.1)
-    print("\t  | |  \\ V /| |_) | ||  \\| | |  _  | |  _  / _ \\ | |\\/| |  _|")
+    print(f"\033[4;{title_start}H  | |  \\ V /| |_) | ||  \\| | |  _  | |  _  / _ \\ | |\\/| |  _|")
     time.sleep(0.1)
-    print("\t  | |   | | |  __/| || |\\  | |_| | | |_| |/ ___ \\| |  | | |___")
+    print(f"\033[5;{title_start}H  | |   | | |  __/| || |\\  | |_| | | |_| |/ ___ \\| |  | | |___")
     time.sleep(0.1)
-    print("\t  |_|   |_| |_|  |___|_| \\_|\\____|  \\____/_/   \\_\\_|  |_|_____|")
+    print(f"\033[6;{title_start}H  |_|   |_| |_|  |___|_| \\_|\\____|  \\____/_/   \\_\\_|  |_|_____|")
     time.sleep(0.1)
     print("")
     time.sleep(0.1)
     print("=" * frame_width)
-    time.sleep(0.5)
+    time.sleep(1)
 
 # 메뉴 화면을 보여주는 함수
 def load_menu():
     clear_area()
     time.sleep(0.5)
-    print("\033[2;2H\t\t\t        [[Choose Gamemode]]\n")
+    print("\033[2;31H[[Choose Gamemode]]\n")
     time.sleep(0.1)
-    print("    1. Numbers", end=" ")
+    print("\033[4;7H1. Numbers")
     time.sleep(0.1)
-    print("    2. Words", end=" ")
+    print("\033[4;23H2. Words", end=" ")
     time.sleep(0.1)
-    print("    3. Sentences", end=" ")
+    print("\033[4;35H3. Sentences", end=" ")
     time.sleep(0.1)
-    print("    4. Scoreboard", end=" ")
+    print("\033[4;50H4. Scoreboard", end=" ")
     time.sleep(0.1)
-    print("    5. Exit")
+    print("\033[4;68H5. Exit")
 
 # 게임 시작 전 화면 - 선택된 게임 모드 표시
 def highlight_mode(mode):
@@ -55,11 +56,16 @@ def highlight_mode(mode):
     for i in range(2):
         print("\033[3;24H\033[K")
         time.sleep(0.5)
-        print("\033[3;25HGamemode " + mode + " has been chosen!")
+        print("\033[3;27HGamemode " + mode + " has been chosen!")
         time.sleep(0.5)
+
+    mode_name = ["< Numbers >", "< Words >", "< Sentences >"]
+    name_pos = (80 - len(str(mode_name[int(mode)-1]))) // 2
     for i in range(2):
-        print("\033[4;1H\033[K")
+        print("\033[5;1H\033[K")
         time.sleep(0.5)
-        print("\033[4;35HFive Rounds")
+        print(f"\033[5;{name_pos}H" + mode_name[int(mode)-1])
         time.sleep(0.5)
+
+
 
