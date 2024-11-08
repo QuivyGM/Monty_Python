@@ -6,6 +6,8 @@ import random
 import time
 # 커스텀 화면 출력 모듈
 import screens
+# 문장을 나누기 위한 모듈
+import re
 # 화면 출력 보조
 os.system("")
 
@@ -26,6 +28,8 @@ while True:
     time.sleep(0.1)
 
     # 게임 모드 입력 받기
+    # \033[ 는 ANSI escape code로 커서의 위치, 출력 내용을 바꿀수가 있음
+    # 아래의 같은 \033[6;37H 같은 경우에는 커서의 위치를 6행 37열로 이동시키는 것
     mode = input("\033[6;37HEnter: ")  # 입력 받기
 
 
@@ -60,7 +64,8 @@ while True:
 
         # f = open 대신 with open()으로 파일 열기 -> 개별적으로 close()을 할 필요가 없음
         with open('scoreboard.txt', 'r') as file:   # 파일 열기
-            scores = file.read().replace(',', '').split()   #파일 내용을 "," 단위로 나누어 저장
+            # 파일을 읽어서 split()으로 나누어서(나누는 기준은 띄어쓰기) scores에 저장
+            scores = file.read().split()
             for i in range(3):  #score 전체 출력 (각 mode 마다 top 3만)
                 print(f"\033[{4+i};24H{scores[i*3]}\033[{4+i};40H{scores[i*3+1]}\033[{4+i};56H{scores[i*3+2]}")
                 time.sleep(0.1)
@@ -107,8 +112,12 @@ while True:
             # Words - 단어 출력
             elif (mode == '2'):
                 # words.txt에서 단어를 불러와서 랜덤으로 선택
+                # with : 파일을 열고 블럭이 끝나면 닫히는 것을 보장
+                # open('words.txt', 'r') as file : words.txt를 r(읽기) 모드로 연다
+                # file: file은 변수로 파일 객체를 가리킨다
                 with open('words.txt', 'r') as file:
-                    words = file.read().replace(',', '').split()    # 파일에 있는 단어들을 리스트로 저장
+                    # file.read(): 파일 전체를 하나의 문자열로 읽어온다
+                    words = file.read().split()
                 templ = random.choice(words)    # 리스트에 랜덤으로 하나 정해서 templ에 저장
 
             # Sentences - 문장 출력
@@ -116,8 +125,19 @@ while True:
                 # sentences.txt에서 문장을 불러와서 랜덤으로 선택
                 with open('sentences.txt', 'r') as file:
                     # 문장 구분 단위는 '.' 으로 구분??
-                    #sentences = [sentence.strip() + end for sentence in file.read().split('.') for end in ['.', '?'] if sentence.endswith(end)]
-                    sentences = [sentence.strip() for sentence in file.read().split('.') if sentence]
+                    # sentence.strip() : 문장의 앞뒤 공백을 제거
+                    # sentence in : 문장을 하나씩 가져 와서
+                    # re.split(r'[.?]', ) : 내용을 '.'과 '?'로 나눈다
+                    # file.read() : 파일 전체를 읽어 온다
+                    # if sentence : 문장이 있다면
+                    # 결론: 파일 안에서(file.read()) . 또는 ?으로 나누어지는(re.split(r'[.?]') 문장인 문장이 있다면 (if sentence)
+                    #      문장을 나누어서 (sentence.strip()) sentences에 저장
+
+                    # 대안: 반복문을 이용해서 문장을 나누어서 sentences에 저장
+                    # 만약 . 으로만 나눌 시 에는
+                    #         sentences = [sentence.strip() for sentence in content.split('.') if sentence]
+
+                    sentences = [sentence.strip() for sentence in re.split(r'[.?]', file.read()) if sentence]
                 templ = random.choice(sentences) + '.'
 
 
@@ -157,21 +177,24 @@ while True:
             time.sleep(0.2)
             input("\033[0m\033[7;29H[[Press Enter to return]]")
 
-        # 라운드 종료
 
+        # 라운드 종료
         average /= round    # 평균 시간 계산
         screens.clear_area()
+        # good game 깜빡이기
         for i in range(2):
             time.sleep(0.5)
             print("\033[3;36H\033[K")
             time.sleep(0.5)
             print("\033[3;36HGood Game!")
+        # 평균 시간 깜빡이기
         for i in range(2):
             time.sleep(0.5)
             print("\033[5;32H\033[K")
             time.sleep(0.5)
             print("\033[5;32HAverage time: {:.2f}".format(average))
         time.sleep(1)
+        # 유저 입력 대기
         input("\033[0m\033[7;29H[[Press Enter to return]]")
 
 
@@ -179,17 +202,33 @@ while True:
         #check numbers of i in  range(0 to 2): mode+i*3
         #if numbers from scoreboard are bigger than average then swap number
         # repeat until end of range
+
+        # scoreboard.txt 파일을 읽고 쓰기 (r+)로 열기
         with open('scoreboard.txt', 'r+') as file:
-            scores = file.read().replace(',', '').split()
+            # 파일에 있는 내용을 split
+            # 만약 콤마 가 있을시 콤마를 없애야 split가 가능함: scores = file.read().replace(',', '').split()
+            scores = file.read().split()
             for i in range(3):
+                # 업데이트 할 점수의 인덱스를 계산 변수
                 index = (int(mode) - 1) + i * 3
+                # average 는 이번 라운드 시간, scores[index]는 기록판에 비교하는 시간
+                # 만약 average가 더 작다면, average를 scores[index]로 바꾼다
                 if float(scores[index]) > float(average):
+                    # format을 이용하여 소수점 2자리까지만 표시
                     formatted_average = "{:.2f}".format(average)
+                    # 두 점수를 바꾼다
                     scores[index], formatted_average = formatted_average, scores[index]
+                    # 새로운 average를 비교할수 있는 float 형태로 변환
                     average = float(formatted_average)
 
+            #파일 포인터를 파일 처음으로 이동
             file.seek(0)
-            file.write(', '.join(scores[:3]) + '\n' + ', '.join(scores[3:6]) + '\n' + ', '.join(scores[6:]))
+            # 파일에 점수를 다시 쓴다
+            # ' '.join(scores[a:b]) + '\n'
+                # join(scores[a:b]) : scores의 a~b번째 인덱스를 ' '로 이어붙인다 (0:3 이면 0, 1, 2번째 인덱스를 이어붙인다)
+                # 끝에 '\n'을 붙여서 줄바꿈을 한다
+            file.write(' '.join(scores[:3]) + '\n' + ' '.join(scores[3:6]) + '\n' + ' '.join(scores[6:]))
+            # 작성한 뒤의 내용을 모두 지운다 (잔여 내용을 없앰)
             file.truncate()
 
     print("\033[10;37H")
