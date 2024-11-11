@@ -1,0 +1,92 @@
+import pygame
+
+# Initialize Pygame and joystick
+pygame.init()
+pygame.joystick.init()
+
+# Check if a controller is connected
+if pygame.joystick.get_count() == 0:
+    print("No controller found.")
+else:
+    controller = pygame.joystick.Joystick(0)
+    controller.init()
+    print(f"Controller '{controller.get_name()}' connected.")
+    print("Press or move every button, joystick, and trigger on the controller to test...")
+
+    # Print controller info
+    num_buttons = controller.get_numbuttons()
+    num_axes = controller.get_numaxes()
+    num_hats = controller.get_numhats()
+
+    print(f"Number of Buttons: {num_buttons}")
+    print(f"Number of Axes (including triggers and joysticks): {num_axes}")
+    print(f"Number of Hats (D-pad): {num_hats}")
+
+    # Main loop to capture inputs
+    running = True
+    while running:
+        for event in pygame.event.get():
+            # Button press and release
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 0:
+                    print("A Button Pressed")
+                elif event.button == 1:
+                    print("B Button Pressed")
+                elif event.button == 2:
+                    print("X Button Pressed")
+                elif event.button == 3:
+                    print("Y Button Pressed")
+                elif event.button == 4:
+                    print("Left Bumper (LB) Pressed")
+                elif event.button == 5:
+                    print("Right Bumper (RB) Pressed")
+                elif event.button == 6:
+                    print("View Button Pressed")
+                elif event.button == 7:
+                    print("Menu Button Pressed")
+                elif event.button == 8:
+                    print("Xbox Button (Guide) Pressed")
+                elif event.button == 9:
+                    print("Left Stick Pressed")
+                elif event.button == 10:
+                    print("Right Stick Pressed")
+                elif event.button == 11:
+                    print("Share Button Pressed")
+            elif event.type == pygame.JOYBUTTONUP:
+                print(f"Button {event.button} released.")
+
+            # Joystick and Trigger movement
+            elif event.type == pygame.JOYAXISMOTION:
+                # Joysticks (Left Stick, Right Stick) and Triggers (LT, RT)
+                if event.axis == 0:
+                    print(f"Left Joystick X-axis moved to {event.value:.2f}")
+                elif event.axis == 1:
+                    print(f"Left Joystick Y-axis moved to {event.value:.2f}")
+                elif event.axis == 2:
+                    print(f"Right Joystick X-axis moved to {event.value:.2f}")
+                elif event.axis == 3:
+                    print(f"Right Joystick Y-axis moved to {event.value:.2f}")
+                elif event.axis == 4:
+                    print(f"Left Trigger (LT) moved to {event.value:.2f}")
+                elif event.axis == 5:
+                    print(f"Right Trigger (RT) moved to {event.value:.2f}")
+
+            # D-pad (Hat) movement, each direction is reported separately
+            elif event.type == pygame.JOYHATMOTION:
+                if event.value == (1, 0):
+                    print("D-pad Right Pressed")
+                elif event.value == (-1, 0):
+                    print("D-pad Left Pressed")
+                elif event.value == (0, 1):
+                    print("D-pad Up Pressed")
+                elif event.value == (0, -1):
+                    print("D-pad Down Pressed")
+                elif event.value == (0, 0):
+                    print("D-pad Released")
+
+            # Quit on ESC key
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running = False
+
+# Cleanup
+pygame.quit()
