@@ -1,0 +1,37 @@
+joystick.
+
+axis:
+    get_axis(0) // left stick x -       1.0 to -1.0
+    get_axis(1) // left stick y -       1.0 to -1.0
+    get_axis(2) // right stick x -      1.0 to -1.0
+    get_axis(3) // right stick y    -   1.0 to -1.0
+    get_axis(4) // left trigger(L2) -   0 to 1.0
+    get_axis(5) // right trigger(R2)    0 to 1.0
+
+    get_axis_count() // number of axes
+    get_axis_name(axis) // axis name
+
+button:
+    get_button(0) // A
+    get_button(1) // B
+    get_button(2) // X
+    get_button(3) // Y
+    get_button(4) // left bumper(L1)
+    get_button(5) // right bumper(R1)
+    get_button(6) // back
+    get_button(7) // start
+    get_button(8) // left stick(L3)
+    get_button(9) // right stick(R3)
+    get_button(10) // up
+    get_button(11) // down
+    get_button(12) // left
+    get_button(13) // right
+
+
+    is_button_pressed(button) // button pressed
+    is_button_released(button) // button released
+    is_button_down(button) // button down
+    is_button_up(button) // button up
+
+    get_button_count() // number of buttons
+    get_button_name(button) // button name
