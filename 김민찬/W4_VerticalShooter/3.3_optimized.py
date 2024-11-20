@@ -57,6 +57,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    keys = pygame.key.get_pressed()
+
     # Controller input
     if pygame.joystick.get_count() > 0:
         axis_x = joystick.get_axis(0)
@@ -68,14 +70,34 @@ while running:
         if abs(axis_y) > 0.1:
             user_y += int(axis_y * user_speed)
 
+        # Move the object based on keyboard input
+        if keys[pygame.K_w]:
+            user_y -= user_speed
+        if keys[pygame.K_s]:
+            user_y += user_speed
+        if keys[pygame.K_a]:
+            user_x -= user_speed
+        if keys[pygame.K_d]:
+            user_x += user_speed
+
         # Shooting with button 5
-        if joystick.get_button(5):
+        if joystick.get_button(5) or keys[pygame.K_SPACE]:
             current_time = pygame.time.get_ticks()
             if current_time - last_shot_time > cooldown:
                 last_shot_time = current_time
                 bullet_x = user_x + user_image.get_width() // 2 - bullet_image.get_width() // 2
                 bullet_y = user_y
                 bullets.append([bullet_x, bullet_y])  # Add the bullet to the list
+
+        if keys[pygame.K_SPACE]:
+            current_time = pygame.time.get_ticks()
+            if current_time - last_shot_time > cooldown:
+                last_shot_time = current_time
+                bullet_x = user_x + user_image.get_width() // 2 - bullet_image.get_width() // 2
+                bullet_y = user_y
+                bullets.append([bullet_x, bullet_y])  # Add the bullet to the list
+
+
 
     user_x = max(0, min(width - user_image.get_width(), user_x))
     user_y = max(0, min(height - user_image.get_height(), user_y))
