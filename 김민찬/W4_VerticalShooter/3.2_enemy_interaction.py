@@ -143,12 +143,31 @@ while running:
         window.blit(enemy_image, (enemy[0], enemy[1]))
 
     #-------------------------- explosion rendering --------------------------#
+    # # Render explosions
+    # for explosion in explosions[:]:
+    #     window.blit(explosion_image, (explosion[0], explosion[1]))
+    #     # Remove explosion after a short time
+    #     if pygame.time.get_ticks() - explosion[2] > 500:  # Explosion lasts 500 ms
+    #         explosions.remove(explosion)
+
     # Render explosions
     for explosion in explosions[:]:
-        window.blit(explosion_image, (explosion[0], explosion[1]))
-        # Remove explosion after a short time
-        if pygame.time.get_ticks() - explosion[2] > 500:  # Explosion lasts 500 ms
+        elapsed_time = pygame.time.get_ticks() - explosion[2]
+
+        # Calculate size based on elapsed time (e.g., grow from 50 to 150 pixels)
+        scale = 50 + (elapsed_time / 500) * 100  # Scale grows from 50 to 150 over 500ms
+        scaled_image = pygame.transform.scale(explosion_image, (int(scale), int(scale)))
+
+        # Adjust position to center the growing explosion
+        scaled_rect = scaled_image.get_rect(center=(explosion[0] + explosion_image.get_width() // 2,
+                                                    explosion[1] + explosion_image.get_height() // 2))
+
+        window.blit(scaled_image, scaled_rect.topleft)
+
+        # Remove explosion after 500 ms
+        if elapsed_time > 500:  # Explosion lasts 500 ms
             explosions.remove(explosion)
+
     #--------------------------------------------------------------------------#
 
     window.blit(object_image, (object_x, object_y))
