@@ -16,12 +16,12 @@ else:
 width, height = 1000, 600
 window = pygame.display.set_mode((width, height))
 # background = pygame.image.load('pixel_sky.png')
-background = pygame.transform.scale(pygame.image.load('pixel_sky.png'), (width, height))
+background = pygame.transform.scale(pygame.image.load('texture/pixel_sky.png'), (width, height))
 pygame.display.set_caption("Move Object with Controller")
 
 # Set up object
 object_size = 100
-object_image = pygame.transform.scale(pygame.image.load('ufo.png'), (object_size, object_size))
+object_image = pygame.transform.scale(pygame.image.load('texture/ufo.png'), (object_size, object_size))
 # object_image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('spaceship.png'), (object_size, object_size)), 45)  # Rotate by 45 degrees
 object_x, object_y = width // 2, height // 2
 object_speed = 5

@@ -17,11 +17,11 @@ else:
 # Set up display
 width, height = 1000, 600
 window = pygame.display.set_mode((width, height))
-background = pygame.transform.scale(pygame.image.load('pixel_sky.png'), (width, height))
+background = pygame.transform.scale(pygame.image.load('texture/pixel_sky.png'), (width, height))
 pygame.display.set_caption("Shooter")
 
 # Set up User
-spaceship_image = pygame.image.load('spaceship.png')
+spaceship_image = pygame.image.load('texture/spaceship.png')
 scale_factor = 0.3
 user_image = pygame.transform.scale(spaceship_image, (spaceship_image.get_width() * scale_factor, spaceship_image.get_height() * scale_factor))
 user_x, user_y = width // 2, height // 2
@@ -29,7 +29,7 @@ user_speed = 10
 user_visible = True
 
 # Set up Bullet
-bullet_image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('missile.png'), (45, 15)), 90)  # 총알 이미지
+bullet_image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('texture/missile.png'), (45, 15)), 90)  # 총알 이미지
 bullet_speed = 10                       # 총알 속도
 bullets = []                            # 실행 중인 총알 리스트
 # Bullet Cooldown
@@ -37,14 +37,14 @@ last_shot_time = 0  # Initialize the last shot time
 cooldown = 500  # Cooldown time in milliseconds - tick은
 
 # Enemy properties
-enemy_image = pygame.transform.scale(pygame.image.load('enemy.png'), (50, 50))  # Load and scale enemy image
+enemy_image = pygame.transform.scale(pygame.image.load('texture/enemy.png'), (50, 50))  # Load and scale enemy image
 enemy_speed = 2
 enemies = []  # List to store active enemies
 enemy_spawn_time = 1000  # Time between spawns in milliseconds
 last_enemy_spawn = pygame.time.get_ticks()
 
 # Explosion properties
-explosion_image = pygame.transform.scale(pygame.image.load('explosion.png'), (50, 50))
+explosion_image = pygame.transform.scale(pygame.image.load('texture/explosion.png'), (50, 50))
 explosions = []  # List of active explosions
 
 #------------------------------------ game loop --------------------------------------#
@@ -70,32 +70,33 @@ while running:
         if abs(axis_y) > 0.1:
             user_y += int(axis_y * user_speed)
 
-        # Move the object based on keyboard input
-        if keys[pygame.K_w]:
-            user_y -= user_speed
-        if keys[pygame.K_s]:
-            user_y += user_speed
-        if keys[pygame.K_a]:
-            user_x -= user_speed
-        if keys[pygame.K_d]:
-            user_x += user_speed
-
         # Shooting with button 5
-        if joystick.get_button(5) or keys[pygame.K_SPACE]:
+        if joystick.get_button(5):
             current_time = pygame.time.get_ticks()
             if current_time - last_shot_time > cooldown:
                 last_shot_time = current_time
                 bullet_x = user_x + user_image.get_width() // 2 - bullet_image.get_width() // 2
                 bullet_y = user_y
                 bullets.append([bullet_x, bullet_y])  # Add the bullet to the list
+    # Move the object based on keyboard input
+    if keys[pygame.K_w]:
+        user_y -= user_speed
+    if keys[pygame.K_s]:
+        user_y += user_speed
+    if keys[pygame.K_a]:
+        user_x -= user_speed
+    if keys[pygame.K_d]:
+        user_x += user_speed
 
-        if keys[pygame.K_SPACE]:
-            current_time = pygame.time.get_ticks()
-            if current_time - last_shot_time > cooldown:
-                last_shot_time = current_time
-                bullet_x = user_x + user_image.get_width() // 2 - bullet_image.get_width() // 2
-                bullet_y = user_y
-                bullets.append([bullet_x, bullet_y])  # Add the bullet to the list
+
+
+    if keys[pygame.K_SPACE]:
+        current_time = pygame.time.get_ticks()
+        if current_time - last_shot_time > cooldown:
+            last_shot_time = current_time
+            bullet_x = user_x + user_image.get_width() // 2 - bullet_image.get_width() // 2
+            bullet_y = user_y
+            bullets.append([bullet_x, bullet_y])  # Add the bullet to the list
 
 
 
@@ -145,8 +146,12 @@ while running:
         render.game_over(window, background, user_image, explosion_image, width, height, user_x, user_y, death_type)
         event = pygame.event.wait()  # Wait for user input to end
 
-    pygame.display.flip()
 
+
+
+    # 프레임 업데이트
+    pygame.display.flip()
+    # 클럭수 고정
     pygame.time.Clock().tick(60)
 
 pygame.quit()
