@@ -1,0 +1,39 @@
+ANSI escape lines:
+
+#broken in pycharm
+
+커서의 위치를 움직이는 코드
+\033[A                  # Move Up by 1 line
+\033[B                  # Move Down by 1 line
+\033[C                  # Move Right by 1 column
+\033[D                  # Move Left by 1 column
+\033[a;bH               # Move to Specific Position (line a, position b)
+
+글씨의 바탕 색깔을 바꾸는 코드
+\033[30m                # Black (Foreground)
+\033[31m                # Red (Foreground)
+\033[32m                # Green (Foreground)
+\033[33m                # Yellow (Foreground)
+\033[34m                # Blue (Foreground)
+\033[35m                # Magenta (Foreground)
+\033[36m                # Cyan (Foreground)
+\033[37m                # White (Foreground)
+\033[39m                # Reset Color (Foreground)
+
+글씨의 색깔을 바꾸는 코드
+\033[40m                # Black Background
+\033[41m                # Red Background
+\033[42m                # Green Background
+\033[43m                # Yellow Background
+\033[44m                # Blue Background
+\033[45m                # Magenta Background
+\033[46m                # Cyan Background
+\033[47m                # White Background
+\033[49m                # Reset Background
+
+글씨 스타일을 바꾸는 코드
+\033[1m                 # Bold
+\033[4m                 # Underline
+\033[5m                 # Blink
+\033[7m                 # Inverted Color
+\033[0m                 # Reset Formatting
